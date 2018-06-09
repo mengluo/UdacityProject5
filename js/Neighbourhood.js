@@ -59,9 +59,9 @@ var viewModel = function() {
 	initialListItems.forEach(function(listItem) {
 		self.listItems.push(new ListItem(listItem));
 	});
-	
+
 	this.filterName = ko.observable('');
-	
+
 	this.filteredItems = ko.computed(function() {
 		var filterName = self.filterName().toLowerCase();
 		if(!filterName){
@@ -73,15 +73,15 @@ var viewModel = function() {
 			})
 		}
 	}, this);
-	
+
 	this.selectedItem = ko.observable( this.filteredItems()[0] );
-	
+
 	this.setSelectedItem = function(clickedItem) {
 		self.selectedItem(clickedItem);
 		animateMarker(clickedItem.markerIndex);
 		populateInfoWindow(clickedItem.markerIndex);
 	};
-	
+
 	this.keyUp = function(d,e){
 		if(self.filteredItems().length == self.listItems().length){
 			enableAllMarkersVisibility();
@@ -91,7 +91,7 @@ var viewModel = function() {
 		}
 		return true;
 	};
-	
+
 	// close existing open window when start typing in filter field
 	this.keyPress = function(d,e){
 		viewModel.largeInfowindow.close();
@@ -105,7 +105,7 @@ function updateMarkersVisibility(filteredItems) {
 	for(var key in markers){
 		markers[key].setVisible(false);
 	}
-	
+
 	for(var index in filteredItems){
 		markers[filteredItems[index].markerIndex].setVisible(true);
 	}
@@ -121,7 +121,7 @@ function enableAllMarkersVisibility(){
 
 // find any matching string starts with the specified substring
 // code attribution from https://stackoverflow.com/questions/28042344/filter-using-knockoutjs
-var stringStartsWith = function (string, startsWith) {          
+var stringStartsWith = function (string, startsWith) {
     string = string || "";
     if (startsWith.length > string.length)
         return false;
@@ -130,6 +130,8 @@ var stringStartsWith = function (string, startsWith) {
 
 ko.applyBindings(new viewModel());
 
+// Note: some of the code below in initMap() and populateInfoWindow() is
+// from Udacity Full-stack Deveoper Nanodegree Course
 function initMap() {
 	// Create a styles array to use with the map.
 	var styles = [
@@ -230,7 +232,7 @@ function initMap() {
 		// Get the position from the initialListItems.
 		var position = {lat:  initialListItems[index].location[0].latitude, lng: initialListItems[index].location[1].longitude};
 		var title = initialListItems[index].name;
-	
+
 		// Create a marker per location, and assign its id with each location's specified marker index.
 		var marker = new google.maps.Marker({
 			position: position,
@@ -239,13 +241,13 @@ function initMap() {
 			icon: defaultIcon,
 			id: initialListItems[index].markerIndex
 		});
-	
+
 		// Create an onclick event to open the large infowindow at each marker.
 		marker.addListener('click', function() {
 			animateMarker(this['id']);
 			populateInfoWindow(this['id']);
 		});
-	
+
 		// Two event listeners - one for mouseover, one for mouseout,
 		// to change the colors back and forth.
 		marker.addListener('mouseover', function() {
@@ -254,11 +256,11 @@ function initMap() {
 		marker.addListener('mouseout', function() {
 			this.setIcon(defaultIcon);
 		});
-	
+
 		// save markers based on its relevant marker index.
 		viewModel.markers[initialListItems[index].markerIndex] = marker;
 	}
-  
+
 	showListings(map, viewModel.markers);
 }
 
@@ -266,7 +268,7 @@ function initMap() {
 function showListings(map, markers) {
 	var bounds = new google.maps.LatLngBounds();
 	// Extend the boundaries of the map for each marker and display the marker
-	for (var key in markers) { 
+	for (var key in markers) {
 		markers[key].setMap(map);
 		bounds.extend(markers[key].position);
 	}
@@ -280,13 +282,13 @@ function animateMarker(markerIndex) {
 	setTimeout(function() {marker.setAnimation(null)}, 1000);
 }
 
-// This function populates the infowindow when the marker is clicked. Only one infowindow 
-// is allowed to be open at the marker that is clicked. And it is populate based on that 
+// This function populates the infowindow when the marker is clicked. Only one infowindow
+// is allowed to be open at the marker that is clicked. And it is populate based on that
 // marker's position.
 function populateInfoWindow(markerIndex) {
 	var marker = viewModel.markers[markerIndex];
 	var infowindow = viewModel.largeInfowindow;
-	
+
 	// Check to make sure the infowindow is not already opened on this marker.
 	if (infowindow.marker != marker) {
 		// Clear the infowindow content to give the streetview time to load.
@@ -297,7 +299,7 @@ function populateInfoWindow(markerIndex) {
 		infowindow.addListener('closeclick', function() {
 		infowindow.marker = null;
 		});
-	
+
 		content = '<h3>' + marker.title + '</h3>'+'<div id="pano"></div><div class="wikipedia-container"><h3 id="wikipedia-header">Relevant Wikipedia Links</h3><ul id="wikipedia-links"></ul></div>';
 		var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search='+marker.title+'&format=json&callback=wikicallback';
 		var wikiRequestTimeout = setTimeout(function(){
@@ -308,23 +310,23 @@ function populateInfoWindow(markerIndex) {
 			dataType: "jsonp",
 			success: function(response){
 				var articleList = response[1];
-				
+
 				for(var i=0; i<articleList.length; i++){
 					articleStr = articleList[i];
 					var url = 'http://en.wikipedia.org/wiki/'+articleStr;
 					$('#wikipedia-links').append('<li><a href="'+url+'">'+articleStr+'</a></li>');
 				}
-				
+
 				clearTimeout(wikiRequestTimeout);
 			}
 		});
-	
+
 		var streetViewService = new google.maps.StreetViewService();
 		var radius = 50;
 		// In case the status is OK, which means the pano was found, compute the
 		// position of the streetview image, then calculate the heading, then get a
 		// panorama from that and set the options
-		
+
 	function getStreetView(data, status) {
 		if (status == google.maps.StreetViewStatus.OK) {
 			var nearStreetViewLocation = data.location.latLng;
@@ -339,7 +341,7 @@ function populateInfoWindow(markerIndex) {
 			};
 			var panorama = new google.maps.StreetViewPanorama(
 			document.getElementById('pano'), panoramaOptions);
-		} 
+		}
 		else {
 			content = '<div>No Street View Found</div>' + content;
 			infowindow.setContent(content);
@@ -348,7 +350,7 @@ function populateInfoWindow(markerIndex) {
 		// Use streetview service to get the closest streetview image within
 		// 50 meters of the markers position
 		streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-	
+
 		// Open the infowindow on the correct marker.
 		infowindow.open(map, marker);
 	}
