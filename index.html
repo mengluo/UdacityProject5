@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Neighbourhood App</title>
+    <meta name="description" content="Neighbourhood App for Udacity project">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="menu">
+        <h1>Neighbourhood of East London</h1>
+			<label>Filter</label>
+			<input data-bind="textInput: filterName, valueUpdate: 'afterkeydown', event: {keyup: keyUp, keypress: keyPress}" />
+			<ul data-bind="foreach: filteredItems">
+				<li class="button" data-bind="text: $data.name, click: $parent.setSelectedItem"></li>
+			</ul>
+      </div>
+      <div id="map"></div>
+    </div>
+
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQEltF3k9sofU4IvZgSaRLbya5Lu9W0S4&v=3&callback=initMap">
+    </script>
+	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="js/knockout-3.4.2.js"></script>
+	<script src="js/Neighbourhood.js"></script>
+
+  </body>
+</html>

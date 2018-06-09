@@ -1,0 +1,88 @@
+html,
+body {
+	font-family: "Trebuchet MS","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Tahoma,sans-serif;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.container {
+	height: 100%;
+	position: relative;
+}
+
+input {
+	font-size: 14px;
+	border-radius: 3px;
+}
+
+h1 {
+	color: #007bff;
+	font-size: 22px;
+	margin: 0 0 10px 0;
+	text-align: center;
+}
+
+#map {
+	bottom:0px;
+	height: 100%;
+	left: 300px;
+	position: absolute;
+	right: 0px;
+}
+
+.menu {
+	background: #D3D3D3;
+	border: 3px solid #999;
+	border-radius: 3px;
+	height: 100%;
+	line-height: 35px;
+	width: 295px;
+	text-align: left;
+}
+
+#pano {
+	width: 200px;
+	height: 200px;
+}
+
+ul {
+	list-style-type: none;
+	margin-top: 20px;
+	width: 100%;
+	padding-left: 0;
+}
+
+li {
+	margin-bottom: 5px;
+	cursor: pointer;
+	font-size: 14px;
+}
+
+.button{
+  font-weight: 400;
+  word-wrap: break-word;
+  width: 75%;
+  color: #007bff;
+  background-color: transparent;
+  border: 2px solid #007bff;
+  padding: .5rem .75rem;
+  line-height: 1.25rem;
+  border-radius: .25rem;
+  transition: all .15s ease-in-out;
+}
+
+.button:hover{
+  color: #ffffff;
+  text-decoration: none !important;
+  background-color: #000000;
+  border: 2px solid #ffffff;
+}
+
+h3 {
+	font-size: 12px;
+}
+
+a {
+	color: #007bff;
+}
