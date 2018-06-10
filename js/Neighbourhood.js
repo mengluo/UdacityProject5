@@ -368,3 +368,8 @@ function makeMarkerIcon(markerColor) {
 		new google.maps.Size(21,34));
 	return markerImage;
 }
+
+// inform users with a alert box if goodle API is not loaded correctly to avoid confusion
+function googleError(){
+	alert("The google API is not loaded correctly.");
+};
