@@ -8,15 +8,22 @@
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
-    <div class="container">
-      <div class="menu">
+    <div id="icon">
+      <a>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"/>
+        </svg>
+      </a>
+    </div>
+    <nav id="drawer" class="menu">
         <h1>Neighbourhood of East London</h1>
 			<label>Filter</label>
 			<input data-bind="textInput: filterName, valueUpdate: 'afterkeydown', event: {keyup: keyUp, keypress: keyPress}" />
 			<ul data-bind="foreach: filteredItems">
 				<li class="button" data-bind="text: $data.name, click: $parent.setSelectedItem"></li>
 			</ul>
-      </div>
+    </nav>
+    <div class="main">
       <div id="map"></div>
     </div>
 

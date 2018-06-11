@@ -1,5 +1,7 @@
 // These are the real listings that will be shown to the user.
 // Normally we'd have these in a database instead.
+var centralPosition = {lat: 51.5200000, lng: -0.057000};
+
 var initialListItems = [
 	{
 		name : 'Queen Mary, University of London',
@@ -55,6 +57,7 @@ var viewModel = function() {
 	this.largeInfowindow;
 	// Create a new blank dictionary for all the listing markers.
 	this.markers;
+	this.map;
 	this.listItems = ko.observableArray([]);
 	initialListItems.forEach(function(listItem) {
 		self.listItems.push(new ListItem(listItem));
@@ -79,7 +82,7 @@ var viewModel = function() {
 	this.setSelectedItem = function(clickedItem) {
 		self.selectedItem(clickedItem);
 		animateMarker(clickedItem.markerIndex);
-		populateInfoWindow(clickedItem.markerIndex);
+		populateInfoWindow(clickedItem.markerIndex, viewModel.map);
 	};
 
 	this.keyUp = function(d,e){
@@ -89,6 +92,8 @@ var viewModel = function() {
 		else{
 			updateMarkersVisibility(self.filteredItems());
 		}
+
+		viewModel.map.setCenter(centralPosition);
 		return true;
 	};
 
@@ -212,12 +217,13 @@ function initMap() {
 
 	// Constructor creates a new map
 	var map = new google.maps.Map(document.getElementById('map'), {
-		center: {lat: 51.5200000, lng: -0.057000},
+		center: centralPosition,
 		zoom: 10,
 		styles: styles,
 		mapTypeControl: true
 	});
 
+	viewModel.map = map;
 	viewModel.largeInfowindow = new google.maps.InfoWindow();
 	viewModel.markers = {};
 	// Style the markers a bit. This will be our listing marker icon.
@@ -245,7 +251,7 @@ function initMap() {
 		// Create an onclick event to open the large infowindow at each marker.
 		marker.addListener('click', function() {
 			animateMarker(this['id']);
-			populateInfoWindow(this['id']);
+			populateInfoWindow(this['id'], map);
 		});
 
 		// Two event listeners - one for mouseover, one for mouseout,
@@ -285,9 +291,12 @@ function animateMarker(markerIndex) {
 // This function populates the infowindow when the marker is clicked. Only one infowindow
 // is allowed to be open at the marker that is clicked. And it is populate based on that
 // marker's position.
-function populateInfoWindow(markerIndex) {
+function populateInfoWindow(markerIndex, map) {
 	var marker = viewModel.markers[markerIndex];
 	var infowindow = viewModel.largeInfowindow;
+
+	map.setCenter(marker.position);
+	map.panTo(marker.position);
 
 	// Check to make sure the infowindow is not already opened on this marker.
 	if (infowindow.marker != marker) {
@@ -297,7 +306,7 @@ function populateInfoWindow(markerIndex) {
 		infowindow.marker = marker;
 		// Make sure the marker property is cleared if the infowindow is closed.
 		infowindow.addListener('closeclick', function() {
-		infowindow.marker = null;
+			infowindow.marker = null;
 		});
 
 		content = '<h3>' + marker.title + '</h3>'+'<div id="pano"></div><div class="wikipedia-container"><h3 id="wikipedia-header">Relevant Wikipedia Links</h3><ul id="wikipedia-links"></ul></div>';
@@ -373,3 +382,17 @@ function makeMarkerIcon(markerColor) {
 function googleError(){
 	alert("The google API is not loaded correctly.");
 };
+
+// Open the drawer when the menu is clicked. Used to improve UI responsiveness
+var drawer = $('#drawer');
+var icon = $('#icon');
+var main = $('.main');
+
+icon.click(function(e) {
+	drawer.toggleClass('open');
+	e.stopPropagation();
+});
+
+main.click(function() {
+	drawer.removeClass('open');
+});

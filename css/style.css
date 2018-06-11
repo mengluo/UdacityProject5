@@ -1,14 +1,16 @@
 html,
-body {
+body,
+main {
 	font-family: "Trebuchet MS","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Tahoma,sans-serif;
 	height: 100%;
+	width: 100%;
 	margin: 0;
 	padding: 0;
 }
 
-.container {
-	height: 100%;
-	position: relative;
+a#icon svg {
+	width: 40px;
+	fill: #000;
 }
 
 input {
@@ -26,19 +28,41 @@ h1 {
 #map {
 	bottom:0px;
 	height: 100%;
-	left: 300px;
+	left: 40px;
 	position: absolute;
 	right: 0px;
+	z-index: 0;
 }
 
-.menu {
+nav {
+	position: absolute;
+	z-index: 3;
+  /* This trasform moves the drawer off canvas. */
+  -webkit-transform: translate(-295px, 0);
+  transform: translate(-300px, 0);
+  /* animate the drawer. */
+  transition: transform 0.3s ease;
+	width: 295px;
+	height: 100%;
 	background: #D3D3D3;
 	border: 3px solid #999;
-	border-radius: 3px;
-	height: 100%;
-	line-height: 35px;
-	width: 295px;
 	text-align: left;
+	border-radius: 3px;
+	line-height: 35px;
+}
+
+nav.open {
+  -webkit-transform: translate(0, 0);
+  transform: translate(0, 0);
+}
+
+#icon {
+	position: absolute;
+	width: 40px;
+	height: 100%;
+	background: #D3D3D3;
+	cursor: pointer;
+	display: block;
 }
 
 #pano {
@@ -85,4 +109,25 @@ h3 {
 
 a {
 	color: #007bff;
+}
+
+@media screen and (min-width: 600px) {
+	nav {
+			position: relative;
+			transform: translate(0, 0);
+	}
+	body {
+		display: flex;
+		flex-flow: row nowrap;
+	}
+	main{
+		width: auto;
+		flex-grow: 1;
+	}
+	#icon {
+		display: none;
+	}
+	#map {
+		left: 300px;
+	}
 }
